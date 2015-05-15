@@ -1,0 +1,6 @@
+*.py~
+*.pyc
+venv/
+db.sqlite3
+.coverage
+tmp/
