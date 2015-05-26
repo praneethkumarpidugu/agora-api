@@ -25,9 +25,9 @@ class UserTests(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
 
         self.user_one = User.objects.create_user(
-            username='one', email='one@exmaple.com', password='one')
+            username='one', email='one@example.com', password='one')
         self.user_two = User.objects.create_user(
-            username='two', email='two@exmaple.com', password='two')
+            username='two', email='two@example.com', password='two')
 
     def test_create_account(self):
         """

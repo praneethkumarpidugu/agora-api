@@ -7,7 +7,6 @@ class RelatedUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('id', 'username', 'url')
-        lookup_field = 'id'
 
 
 class PageSerializer(serializers.ModelSerializer):
@@ -17,7 +16,7 @@ class PageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Page
-        fields = ('id', 'name', 'user', 'created', 'updated')
+        fields = ('id', 'name', 'stylesheet', 'user', 'created', 'updated')
 
 
 class CommentSerializer(serializers.ModelSerializer):

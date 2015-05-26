@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import api_view, list_route
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from .models import Comment, Page, User
@@ -18,17 +19,24 @@ def api_root(request, format=None):
 
 
 class PageViewSet(viewsets.ModelViewSet):
+    lookup_field = 'id'
+    parser_classes = (MultiPartParser, FormParser,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = Page.objects.all()
     serializer_class = PageSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    lookup_field = 'id'
+
+    def perform_create(self, serializer):
+        if self.request.data.get('stylesheet'):
+            serializer.save(stylesheet=self.request.data.get('stylesheet'), user=self.request.user)
+        else:
+            serializer.save(user=self.request.user)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    lookup_field = 'id'
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    lookup_field = 'id'
 
 
 @api_view(('GET',))

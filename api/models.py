@@ -1,4 +1,6 @@
+import os
 import uuid
+from django.conf import settings
 from django.contrib.auth.models import User as AuthUser
 from django.db import models
 
@@ -17,10 +19,15 @@ class Common(models.Model):
         abstract = True
 
 
+def get_stylesheet_filename(instance, filename):
+    return os.path.join(settings.BASE_DIR, 'stylesheets', str(instance.id) + '.css')
+
+
 class Page(Common):
     name = models.TextField()
+    stylesheet = models.FileField(null=True, blank=True, upload_to=get_stylesheet_filename)
 
-    user = models.ForeignKey(User, related_name='pages')
+    user = models.ForeignKey(AuthUser, related_name='pages')
 
     def __str__(self):
         return self.name
@@ -30,7 +37,7 @@ class Comment(Common):
     text = models.TextField()
 
     parent = models.ForeignKey('self', related_name='children', blank=True, null=True)
-    user = models.ForeignKey(User, related_name='comments')
+    user = models.ForeignKey(AuthUser, related_name='comments')
     page = models.ForeignKey(Page, related_name='comments')
 
     def __str__(self):
