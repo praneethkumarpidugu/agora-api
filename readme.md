@@ -2,10 +2,12 @@
 
 ##Features
 
-- [x]Create users
-- [x]Create a Page
-- [x]Add Comments to a Page
-- [x]Reply to Comments
+- [x] Create Users
+- [x] Create a Page
+- [x] Upload a stylesheet for a Page
+- [x] Access stylesheet for a Page
+- [x] Add Comments to a Page
+- [x] Add Comments to a Comment
 
 ##Development Setup
 
