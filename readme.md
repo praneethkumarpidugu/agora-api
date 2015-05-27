@@ -32,14 +32,27 @@ The API is now available at [http://localhost:8000/api/v1.0/](http://localhost:8
 
 ##Usage
 
+###Create a User
+
+```shell
+http --json POST http://localhost:8000/api/v1.0/users username=username password=password
+```
+
 ###Authentication
 
 ```shell
 http --json POST http://localhost:8000/api/v1.0/auth/token \
 username=username password=password
 # Authenticated requests use 'Authorization: Token'
-http --json GET http://localhost:8000/api/v1.0/credit-cards \
+http --json GET http://localhost:8000/api/v1.0/pages \
 'Authorization:Token bb83e4b5f137958432aacde8c64c6e99e11b1'
+```
+
+###Create a Page
+
+```shell
+http --json POST http://localhost:8000/api/v1.0/pages \
+    'Authorization:Token bb83e4b5f137958432aacde8c64c6e99e11b1' name=First
 ```
 
 ##Tests

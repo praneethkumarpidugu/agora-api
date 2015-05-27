@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from api.models import Page, User
-from api.serializers import PageSerializer
 
 
 class PageTests(APITestCase):
@@ -23,7 +22,7 @@ class PageTests(APITestCase):
             'name': 'Endpoint Works',
         }
 
-        response = self.client.post(url, data)
+        response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], 'Endpoint Works')
 
