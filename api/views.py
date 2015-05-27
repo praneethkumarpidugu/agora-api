@@ -13,7 +13,7 @@ from .serializers import CommentSerializer, PageSerializer, \
 def api_root(request, format=None):
     return Response({
         'pages': reverse('page-list', request=request, format=format),
-        'comments': reverse('comment-list', request=request, format=format),
+        'users': reverse('user-list', request=request, format=format),
         'auth-token': reverse('auth-token', request=request, format=format)
     })
 
@@ -72,12 +72,10 @@ class UserViewSet(viewsets.ModelViewSet):
     def create_user(self, request):
         serialized = CreateUserSerializer(data=request.DATA)
         if serialized.is_valid():
-            user = User(
-                email=serialized.data.get('email'),
-                username=serialized.data.get('username')
-            )
-            user.set_password(serialized.data.get('password'))
-            user.save()
+            user = User.objects.create_user(
+                serialized.data.get('username'),
+                serialized.data.get('email'),
+                serialized.data.get('password'))
 
             return Response(UserSerializer(user).data,
                             status=status.HTTP_201_CREATED)

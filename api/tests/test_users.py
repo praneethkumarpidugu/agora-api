@@ -117,3 +117,19 @@ class UserTests(APITestCase):
         url = reverse('user-detail', kwargs={'pk': self.user_two.pk})
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
+
+    def test_create_users_without_email(self):
+        client = APIClient()
+        url = reverse('user-list')
+        data = {
+            'username': 'Cody',
+            'password': 'cody'
+        }
+        response = client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        data = {
+            'username': 'Jayden',
+            'password': 'jayden'
+        }
+        response = client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
