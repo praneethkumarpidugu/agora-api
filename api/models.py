@@ -46,6 +46,7 @@ class Comment(Common):
     def to_JSON(self):
         return {
             'id': self.id,
+            'text': self.text,
             'parent': self.parent.id if self.parent else None,
             'user': self.user.id,
             'page': self.page.id,

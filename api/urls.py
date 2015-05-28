@@ -13,8 +13,7 @@ page_detail = views.PageViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',
-    'delete': 'destroy',
-    'post': 'create_comment'
+    'delete': 'destroy'
 })
 
 comment_list = views.CommentViewSet.as_view({

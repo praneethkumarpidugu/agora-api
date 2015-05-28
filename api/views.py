@@ -1,13 +1,12 @@
-from django.forms import ModelForm
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
-from rest_framework.decorators import api_view, detail_route, list_route
+from rest_framework.decorators import api_view, list_route
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from .models import Comment, Page, User
-from .serializers import CommentSerializer, PageSerializer, \
-                         UserSerializer, CreateUserSerializer
+from .serializers import CommentSerializer, CreateCommentSerializer, \
+                         PageSerializer, UserSerializer, CreateUserSerializer
 
 
 @api_view(('GET',))
@@ -32,25 +31,6 @@ class PageViewSet(viewsets.ModelViewSet):
         else:
             serializer.save(user=self.request.user)
 
-    @detail_route(methods=['POST'])
-    def create_comment(self, request, id=None):
-        page = self.get_object()
-        request.DATA['page'] = page.id
-        request.DATA['user'] = request.user.id
-        serialized = CommentSerializer(data=request.DATA)
-        if serialized.is_valid():
-            comment = serialized.save()
-            return Response(CommentSerializer(comment).data,
-                            status=status.HTTP_201_CREATED)
-
-        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CommentForm(ModelForm):
-    class Meta:
-        model = Comment
-        fields = ['text', 'parent']
-
 
 class CommentViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
@@ -72,14 +52,17 @@ class CommentViewSet(viewsets.ModelViewSet):
     def create(self, request, id):
         page = get_object_or_404(Page, pk=id)
 
-        form = CommentForm(request.POST)
-        if form.is_valid():
+        serialized = CreateCommentSerializer(data=request.data)
+        if serialized.is_valid():
             comment = Comment.objects.create(
                 page=page,
                 user=request.user,
-                text=form.cleaned_data.get('text'),
-                parent=form.cleaned_data.get('parent'))
-            return Response(CommentSerializer(comment, context={'request': request}).data, status=status.HTTP_201_CREATED)
+                text=serialized.validated_data.get('text'),
+                parent=serialized.validated_data.get('parent'))
+            return Response(CommentSerializer(
+                comment,
+                context={'request': request}).data,
+                status=status.HTTP_201_CREATED)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -105,9 +88,9 @@ class UserViewSet(viewsets.ModelViewSet):
         serialized = CreateUserSerializer(data=request.DATA)
         if serialized.is_valid():
             user = User.objects.create_user(
-                serialized.data.get('username'),
-                serialized.data.get('email'),
-                serialized.data.get('password'))
+                serialized.validated_data.get('username'),
+                serialized.validated_data.get('email'),
+                serialized.validated_data.get('password'))
 
             return Response(UserSerializer(user).data,
                             status=status.HTTP_201_CREATED)

@@ -32,6 +32,8 @@ The API is now available at [http://localhost:8000/api/v1.0/](http://localhost:8
 
 ##Usage
 
+The following examples use [HTTPie](https://github.com/jakubroztocil/httpie).
+
 ###Create a User
 
 ```shell
@@ -53,6 +55,32 @@ http --json GET http://localhost:8000/api/v1.0/pages \
 ```shell
 http --json POST http://localhost:8000/api/v1.0/pages \
     'Authorization:Token bb83e4b5f137958432aacde8c64c6e99e11b1' name=First
+```
+
+Adding a Stylesheet to a page
+```shell
+http -f PATCH http://localhost:8000/api/v1.0/pages/594d4ccb-a1bc-472b-b96f-48ed580bac9f \
+'Authorization:Token bb83e4b5f137958432aacde8c64c6e99e11b1' stylesheet@stylesheet.css
+```
+
+Creating a Page with a stylesheet
+```shell
+http -f POST http://localhost:8000/api/v1.0/pages \
+'Authorization:Token bb83e4b5f137958432aacde8c64c6e99e11b1' stylesheet@stylesheet.css name=Second
+```
+
+###Create Comments
+
+```shell
+http --json POST http://localhost:8000/api/v1.0/pages/594d4ccb-a1bc-472b-b96f-48ed580bac9f/comments \
+'Authorization:Token bb83e4b5f137958432aacde8c64c6e99e11b1' text='Long Comment'
+```
+
+Reply Comment (using id from previous response)
+
+```shell
+http --json POST http://localhost:8000/api/v1.0/pages/594d4ccb-a1bc-472b-b96f-48ed580bac9f/comments \
+'Authorization:Token bb83e4b5f137958432aacde8c64c6e99e11b1' text='Child Comment' parent=be347809-0dba-4e80-9646-0ba603408ddd
 ```
 
 ##Tests
