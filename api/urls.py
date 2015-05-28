@@ -13,7 +13,8 @@ page_detail = views.PageViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',
-    'delete': 'destroy'
+    'delete': 'destroy',
+    'post': 'create_comment'
 })
 
 comment_list = views.CommentViewSet.as_view({
@@ -49,7 +50,7 @@ urlpatterns = format_suffix_patterns([
         page_detail,
         name='page-detail'),
     url(r'^pages/(?P<id>[^/]+)/comments/?$',
-        views.page_comments,
+        comment_list,
         name='page-comments'),
     url(r'^comments/(?P<id>[^/]+)/?$',
         comment_detail,

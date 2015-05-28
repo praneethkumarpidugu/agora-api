@@ -6,7 +6,13 @@ from .models import Comment, Page
 class RelatedUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'url')
+        fields = ('id', 'username', 'url',)
+
+
+class RelatedPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = ('id',)
 
 
 class PageSerializer(serializers.ModelSerializer):
@@ -20,9 +26,8 @@ class PageSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    user = RelatedUserSerializer()
+    page = RelatedPageSerializer()
 
     class Meta:
         model = Comment

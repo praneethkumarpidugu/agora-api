@@ -55,3 +55,23 @@ class PageTests(APITestCase):
         response = self.client.post(url, data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], 'Created')
+
+    def test_add_comment_to_page(self):
+        page = Page.objects.create(name='First', user=self.user)
+        url = reverse('page-comments', kwargs={'id': page.id})
+
+        response = self.client.post(url, data={'text': 'comment'})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_add_comment_with_parent_to_page(self):
+        page = Page.objects.create(name='First', user=self.user)
+        url = reverse('page-comments', kwargs={'id': page.id})
+
+        # First comment
+        response = self.client.post(url, data={'text': 'comment'})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        parent = response.data.get('id')
+
+        response = self.client.post(url, data={'text': 'comment', 'parent': parent})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
