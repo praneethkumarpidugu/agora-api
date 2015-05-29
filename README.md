@@ -12,6 +12,8 @@
 ##Development Setup
 
 ```shell
+git clone git@github.com:praneethkumarpidugu/agora-api.git
+cd agora-api
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements/development.txt
